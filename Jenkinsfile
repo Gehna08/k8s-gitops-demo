@@ -1,8 +1,3 @@
-cd ~/k8s-gitops-demo
-git checkout main
-
-# Create updated Jenkinsfile with correct PATH
-cat > Jenkinsfile <<'EOF'
 pipeline {
     agent any
     
