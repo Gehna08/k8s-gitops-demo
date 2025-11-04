@@ -1,4 +1,8 @@
+cd ~/k8s-gitops-demo
+git checkout main
 
+# Create updated Jenkinsfile with correct PATH
+cat > Jenkinsfile <<'EOF'
 pipeline {
     agent any
     
@@ -9,6 +13,7 @@ pipeline {
     environment {
         GIT_REPO = 'https://github.com/Gehna08/k8s-gitops-demo.git'
         KUBECONFIG = credentials('minikube-kubeconfig')
+        PATH = "/opt/homebrew/bin:/usr/local/bin:${env.PATH}"
     }
     
     stages {
@@ -39,6 +44,7 @@ pipeline {
                 script {
                     sh """
                         export KUBECONFIG=\${KUBECONFIG}
+                        echo "kubectl location: \$(which kubectl)"
                         echo "Deploying to ${params.ENVIRONMENT} namespace..."
                         kubectl apply -f manifests/${params.ENVIRONMENT}/
                         kubectl rollout status deployment/polling-app -n ${params.ENVIRONMENT}
